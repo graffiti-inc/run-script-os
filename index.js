@@ -34,6 +34,14 @@ if (process.env.RUN_OS_WINBASH_IS_LINUX) {
   let shell = process.env.SHELL || process.env.TERM;
   shell = shell && shell.match("bash.exe") ? "bash.exe" : shell;
   platform = shell && ["bash.exe", "cygwin"].includes(shell) ? "linux" : process.platform;
+
+  /**
+   * Graffiti addition to handle the case of the 1st instance of git bash terminal spawn within VS Code
+   * See https://github.com/charlesguse/run-script-os/issues/51 for details
+   **/
+  let term = process.env.TERM;
+  let program = process.env.TERM_PROGRAM;
+  platform = term && term.match("xterm") && program && ["vscode"].includes(program) ? "linux" : platform;
 }
 
 /**
